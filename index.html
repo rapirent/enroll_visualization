@@ -16,13 +16,16 @@
 .option{
   margin: 30px;
 }*/
+.column{
+  display: inline-block;
+}
 body {
   display: table-cell;
   vertical-align: middle;
   font-size: 16px;
   font-family: 'cwTeXYen', sans-serif;
   letter-spacing: 1px;
-  line-height: 14px;
+  line-height: 20px;
   font-weight: normal;
   color: #666666;
 }
@@ -30,7 +33,7 @@ body {
 </style>
 <body>
     <div class="option">
-    <span style="font-size:14px">選擇領域：</span>
+    <span style="font-size:16px">選擇領域：</span>
     <select id="field" ></select>
     <!-- onChange="renew(this.selectedIndex);" -->
 <!--         <option disabled=disabled selected=selected>領域
@@ -44,20 +47,24 @@ body {
         <option>服務領域</option>
         <option>其他領域</option> -->
 
-    <span style="font-size:14px">選擇學門：</span>
+    <span style="font-size:16px">選擇學門：</span>
     <select id="discipline">
 <!--         <option value="0" disabled=disabled selected=selected>請先選取領域</option>
  -->    </select>
-    <span style="font-size:14px">選擇學類：</span>
+    <span style="font-size:16px">選擇學類：</span>
     <select id="subject"></select>
     <button id="search" type="button">search</button>
      <span style="text-anchor:left"><br>(顏色分類以教育部公佈之科系代碼為準)<br>
     參考來源：教育部104年公佈之大專院校錄取率<br>
     </span>
-    <div id="checkboxes" style="font-size:16px"></div>
     </div>
-    <div>
-        <div class="chart"></div>
+    <div class="row">
+        <div class="column">
+            <div class="chart"></div>
+        </div>
+        <div class="column">
+            <div id="checkboxes" style="font-size:16px"></div>
+        </div>
     </div>
     <div class="xAxis"></div>
     <!-- <div id="tooltip" class="hidden"></div> -->
@@ -90,7 +97,7 @@ body {
     {
         $.getJSON("data/field.json", function (data){
             $('#field').empty()
-                        .append($('<option></option>').val('').text("請選擇學門"));
+                        .append($('<option></option>').val('').text("請選擇領域"));
             $.each(data, function (i, item){
                 $('#field').append(
                             $('<option></option>').val(item.fieldId)
@@ -353,7 +360,7 @@ function updataBarChart(newData,data){
                 return xScale(data.length);
             },
             "y": function(d){
-                return height - yScale(d.enroll_rate)
+                return height - yScale(d.enroll_rate);
             },
             "width": barWidth,
             "height": function(d){
@@ -403,11 +410,11 @@ function updataBarChart(newData,data){
             }
         });
 }
-    var xLable = d3.selectAll(".xAxis")
-                    .attr({
-                        "width": width,
-                        "height": height
-                    });
+    // var xLable = d3.selectAll(".xAxis")
+    //                 .attr({
+    //                     "width": width,
+    //                     "height": height
+    //                 });
 });
 });
 };
