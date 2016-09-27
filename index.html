@@ -88,7 +88,7 @@ body {
 
     function Page_Init()
     {
-        $.getJSON("/data/field.json", function (data){
+        $.getJSON("data/field.json", function (data){
             $('#field').empty()
                         .append($('<option></option>').val('').text("請選擇學門"));
             $.each(data, function (i, item){
@@ -168,7 +168,7 @@ body {
 document.getElementById("search").onclick = function () {
 d3.selectAll("#selectSubject").remove();
 var selectDepartment;
-d3.json("/data/checkboxList_" + subjectNumber + ".json" , function(error, json){
+d3.json("data/checkboxList_" + subjectNumber + ".json" , function(error, json){
 if (error)
 {
     console.log(error);
@@ -220,8 +220,8 @@ if (error)
     var data;
     d3.select("svg").remove();
     console.log(subjectNumber);
-    console.log("/data/" + subjectNumber +  ".csv");
-d3.csv("/data/" + subjectNumber +  ".csv", function(error, dataset){
+    console.log("data/" + subjectNumber +  ".csv");
+d3.csv("data/" + subjectNumber +  ".csv", function(error, dataset){
 if (error){
     console.log(error);
 }
