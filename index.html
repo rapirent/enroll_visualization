@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>enrollment_rate</title>
+    <!-- <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script> -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+</head>
+<style>
+
+/*button{
+  margin-left: 15px;
+}
+.option{
+  margin: 30px;
+}*/
+body {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 12px;
+  font-family: 'cwTeXYen', sans-serif;
+  letter-spacing: 1px;
+  line-height: 14px;
+  font-weight: normal;
+  color: #666666;
+}
+
+</style>
+<body>
+    <div class="option">
+    <span style="font-size:14px">選擇領域：</span>
+    <select id="field" ></select>
+    <!-- onChange="renew(this.selectedIndex);" -->
+<!--         <option disabled=disabled selected=selected>領域
+        <option>教育領域</option>
+        <option>人文及藝術領域</option>
+        <option>社會科學、商業及法律領域</option>
+        <option>科學領域</option>
+        <option>工程、製造及營造領域</option>
+        <option>農學領域</option>
+        <option>醫藥衛生及社福領域</option>
+        <option>服務領域</option>
+        <option>其他領域</option> -->
+
+    <span style="font-size:14px">選擇學門：</span>
+    <select id="discipline">
+<!--         <option value="0" disabled=disabled selected=selected>請先選取領域</option>
+ -->    </select>
+    <span style="font-size:14px">選擇學類：</span>
+    <select id="subject"></select>
+    <button id="search" type="button">search</button>
+     <span style="text-anchor:left"><br>(顏色分類以教育部公佈之科系代碼為準)<br>
+    參考來源：教育部104年公佈之大專院校錄取率<br>
+    </span>
+    <div id="checkboxes"></div>
+    </div>
+    <div>
+        <div class="chart"></div>
+    </div>
+    <div class="xAxis"></div>
+    <!-- <div id="tooltip" class="hidden"></div> -->
+    <!-- <div id = "legendContainer" class="legendContainer"></div> -->
+<script>
+
+        // discipline_option=new Array();
+        // discipline_option[1]=["教育學門"];
+        // discipline_option[2]=["藝術學門", "人文學門", "設計學門"];
+        // discipline_option[3]=["社會及行為科學學門", "傳播學門", "商業及管理學門", "法律學門"];
+        // discipline_option[4]=["生命科學學門", "自然科學學門", "數學及統計學門", ,"電算機學門"];
+        // discipline_option[5]=["工程學門", "建築及都市規劃學門"];
+        // discipline_option[6]=["農業科學學門", "獸醫學門"];
+        // discipline_option[7]=["醫藥衛生學門", "社會服務學門"];
+        // discipline_option[8]=["民生學門", "運輸服務學門", "環境保護學門", "軍營國防安全學門"];
+        // discipline_option[9]=["其他學門"];
+
+
+
+
+    $(document).ready(function()
+    {
+        Page_Init();
+
+    });
+
+    var subjectNumber;
+
+    function Page_Init()
+    {
+        $.getJSON("/data/field.json", function (data){
+            $('#field').empty()
+                        .append($('<option></option>').val('').text("請選擇學門"));
+            $.each(data, function (i, item){
+                $('#field').append(
+                            $('<option></option>').val(item.fieldId)
+                                                .text(item.fieldName)
+                            );
+            });
+        });
+
+        $('#discipline').empty().append($('<option></option>').val('').text("-"));
+        $('#subject').empty().append($('<option></option>').val('').text("-"));
+
+        //if there is a change, change it!
+        $('#field').change(function(){
+            fieldChange();
+        });
+
+        $('#discipline').change(function(){
+            disciplineChange();
+        });
+        //get the subjectNumber
+        $('#subject').change(function(){
+            subjectNumber = $.trim($('#subject option:selected').val());
+        });
+    }
+
+    function fieldChange(){
+
+        $('#discipline').empty().append($('<option></option>').val('').text("請選擇學門"));
+        $('#subject').empty().append($('<option></option>').val('').text("-"));
+
+        var fieldNumber = $.trim($('#field option:selected').val());
+        if(fieldNumber.length != 0){
+            $.getJSON('data/discipline_0'+ fieldNumber +'.json', function(data){
+                $.each(data, function(i, item){
+                    $('#discipline').append(
+                                    $('<option></option>').val(item.disciplineId)
+                                                        .text(item.disciplineName)
+                                        );
+                });
+            });
+        }
+    }
+
+    function disciplineChange(){
+
+        $('#subject').empty().append($('<option></option>').val('').text("請選擇學類"));
+
+        var fieldNumber = $.trim($('#field option:selected').val());
+        var disciplineNumber = $.trim($('#discipline option:selected').val());
+
+        console.log('data/subject_0'+ fieldNumber + disciplineNumber + '.json')
+        if(fieldNumber.length != 0  && disciplineNumber.length!=0){
+            $.getJSON('data/subject_0'+ fieldNumber + disciplineNumber + '.json', function(data){
+                $.each(data, function(i, item){
+                    $('#subject').append(
+                                $('<option></option>').val(item.subjectId)
+                                                    .text(item.subjectName)
+                                        );
+                });
+            });
+        }
+    };
+    //used to filter JSON and choose what to display
+    //it will return values whose id is selected key in json
+    function filterJSON(json, key, value) {
+        var result = [];
+            for (var foo in json) {
+                if (json[foo][key] === value) {
+                    result.push(json[foo]);
+                }
+            }
+        return result;
+    }
+//create json along with json
+document.getElementById("search").onclick = function () {
+d3.selectAll("#selectSubject").remove();
+var selectDepartment;
+d3.json("/data/checkboxList_" + subjectNumber + ".json" , function(error, json){
+if (error)
+{
+    console.log(error);
+}
+    var margin = {top: 100, right: 50, bottom: 30, left: 80};
+    var width = 1000 , height = 500, padding = 30, barMargin = 9;
+    $.each(json, function () {
+        $("#checkboxes").attr({
+                            "width": width,
+                        })
+                        .append($("<div>").text(this.Name)
+                        .attr('style', "color:" + this.Color)
+                        .attr('id', "selectSubject")
+                        .prepend(
+                            $("<input>").attr('type', 'checkbox')
+                                    .val(this.Id)
+                                    .prop('checked', this.checked)
+                        ));
+        selectDepartment = filterJSON(json, "checked", true);
+    });
+
+
+    $("#checkboxes").on('change', '[type=checkbox]', function () {
+        if(!this.checked){
+            for (var foo in json) {
+                if (json[foo]["Id"] === this.value) {
+                    json[foo]["checked"] = false;
+                }
+            }
+        }
+        else{
+            for (var foo in json) {
+                if (json[foo]["Id"] === this.value) {
+                    json[foo]["checked"] = true;
+                }
+            }
+        }
+        selectDepartment = filterJSON(json, "checked", true);
+        // console.log(json);
+        console.log(selectDepartment);
+    });
+
+
+
+
+
+
+// d3 to visualize
+    var data;
+    d3.select("svg").remove();
+    console.log(subjectNumber);
+    console.log("/data/" + subjectNumber +  ".csv");
+d3.csv("/data/" + subjectNumber +  ".csv", function(error, dataset){
+if (error){
+    console.log(error);
+}
+    console.log(dataset);
+    data = dataset;
+    updataBarChart(dataset,dataset);
+    $("#checkboxes").on('change', '[type=checkbox]', function () {
+        var result=[];
+        for (var foo in dataset) {
+            for(var barr in selectDepartment){
+                if(dataset[foo]["department_number"] === selectDepartment[barr]["Id"])
+                    result.push(dataset[foo]);
+            }
+        }
+        d3.select("svg").remove();
+        console.log(dataset);
+        console.log(selectDepartment);
+        console.log(result);
+        updataBarChart(result,dataset);
+    });
+
+function updataBarChart(data, dataset){
+    var yMax = d3.max(dataset, function(d){return parseInt(d.enroll_rate)}),
+        yMin = d3.min(dataset, function(d){return parseInt(d.enroll_rate)});
+    var nameLengthMax = d3.max(dataset, function(d){
+        return d.name.length;
+    });
+    var xScale = d3.scale.linear()
+                    .domain([0, dataset.length])
+                    .range([padding, width - padding]);
+    var yScale = d3.scale.linear()
+                        .domain([yMin, yMax])
+                        .range([padding, height - padding]);
+
+    var barWidth = (width - padding*2) / dataset.length - barMargin;
+
+
+    var svg = d3.select(".chart").append("svg")
+                                .attr("width", width)
+                                .attr("height", height);
+    data = data.sort(function(a, b) {
+        return d3.descending(parseFloat(a.enroll_rate), parseFloat(b.enroll_rate));
+    });
+    // console.log(data);
+
+    // var tooltip = d3.select("body")
+    //                 .append("div")
+    //                 .attr("class","tooltip")
+    //                 .style("opacity",0.0);
+
+
+
+
+var bar = svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect");
+
+    bar.attr({
+            "fill": function(d){
+                for(var foo in json){
+                    if(d.department_number === json[foo]["Id"]){
+                        return json[foo]["Color"];
+                    }
+                }
+                return "#09a";
+            },
+            "x": function(d, i){
+                return xScale(i);
+            },
+            "y": height,
+            "width": barWidth,
+            "height": function(d){
+                return yScale(d.enroll_rate);
+            }})
+        .transition()
+        .duration(1000)
+        .attr({
+            "y": function(d){
+                return height - yScale(d.enroll_rate);
+            }
+        })
+
+    bar.append("title")
+        .text(function(d) {
+            if(d.national != "公立"){
+                return d.national + d.name + " " + d.department_name;
+            }
+            return d.name + " " + d.department_name;
+        });
+        //TEXT and test
+
+    svg.selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d, i){
+            return d.enroll_rate + "%";
+        })
+        .attr({
+            "x": function(d,i){
+                return xScale(i);
+            },
+            "y": height,
+            "fill": "black",
+            "font-weight": "bold",
+            "font-anchor": "center",
+            "font-size": "10px",
+        })
+        .transition()
+        .duration(1000)
+        .attr({
+            "y": function(d){
+                return height - yScale(d.enroll_rate)  - 1;
+            }
+        });
+
+    // //TODO
+    // var xLable = d3.select(".xAxis");//data.length * nameLengthMax);
+
+    // xLable.selectAll("text")
+    //         .data(data)
+    //         .enter()
+    //         .append("text")
+    //         .text(function(d, i){
+    //             return d.name;
+    //         })
+    //         .attr({
+    //             "x": function(d,i){
+    //                 return xScale(i);
+    //             },
+    //             "y": 0,
+    //             "fill": "black",
+    //             "font-weight": "bold",
+    //             "font-anchor": "center",
+    //             "font-size": "12px",
+    //             "transform": "rotate(180)"
+    //         });
+}
+});
+});
+};
+
+
+</script>
+</html>

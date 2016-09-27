@@ -1,0 +1,38 @@
+[
+    {
+        "Id": "140101",
+        "Name": "教育學系",
+        "checked": true,
+        "Color": "#98abc5"
+    },
+    {
+        "Id": "140107",
+        "Name": "教育心理與輔導學系",
+        "checked": true,
+        "Color": "#8a89a6"
+    },
+    {
+        "Id": "140108",
+        "Name": "教育心理與諮商學系",
+        "checked": true,
+        "Color": "#6b486b"
+    },
+    {
+        "Id": "140120",
+        "Name": "課程設計與潛能開發學系",
+        "checked": true,
+        "Color": "#7b6888"
+    },
+    {
+        "Id": "140121",
+        "Name": "國際文教與比較教育學系",
+        "checked": true,
+        "Color": "#a05d56"
+    },
+    {
+        "Id": "140124",
+        "Name": "諮商心理與人力資源發展學",
+        "checked": true,
+        "Color": "#d0743c"
+    }
+]
