@@ -19,7 +19,7 @@
 body {
   display: table-cell;
   vertical-align: middle;
-  font-size: 12px;
+  font-size: 16px;
   font-family: 'cwTeXYen', sans-serif;
   letter-spacing: 1px;
   line-height: 14px;
@@ -54,7 +54,7 @@ body {
      <span style="text-anchor:left"><br>(顏色分類以教育部公佈之科系代碼為準)<br>
     參考來源：教育部104年公佈之大專院校錄取率<br>
     </span>
-    <div id="checkboxes"></div>
+    <div id="checkboxes" style="font-size:16px"></div>
     </div>
     <div>
         <div class="chart"></div>
@@ -210,77 +210,55 @@ if (error)
         // console.log(json);
         console.log(selectDepartment);
     });
-
-
-
-
-
-
 // d3 to visualize
-    var data;
     d3.select("svg").remove();
     console.log(subjectNumber);
     console.log("data/" + subjectNumber +  ".csv");
-d3.csv("data/" + subjectNumber +  ".csv", function(error, dataset){
+d3.csv("data/" + subjectNumber +  ".csv", function(error, data){
 if (error){
     console.log(error);
 }
-    console.log(dataset);
-    data = dataset;
-    updataBarChart(dataset,dataset);
+    console.log(data);
+    // data = dataset;
+    // updataBarChart(dataset,dataset);
     $("#checkboxes").on('change', '[type=checkbox]', function () {
-        var result=[];
-        for (var foo in dataset) {
-            for(var barr in selectDepartment){
-                if(dataset[foo]["department_number"] === selectDepartment[barr]["Id"])
-                    result.push(dataset[foo]);
-            }
-        }
-        d3.select("svg").remove();
-        console.log(dataset);
+        var newData = updataData(data,selectDepartment);
+        d3.selectAll("text").remove();
         console.log(selectDepartment);
-        console.log(result);
-        updataBarChart(result,dataset);
+        console.log(data);
+        updataBarChart(newData,data);
     });
 
-function updataBarChart(data, dataset){
-    var yMax = d3.max(dataset, function(d){return parseInt(d.enroll_rate)}),
-        yMin = d3.min(dataset, function(d){return parseInt(d.enroll_rate)});
-    var nameLengthMax = d3.max(dataset, function(d){
+    var yMax = d3.max(data, function(d){return parseInt(d.enroll_rate)}),
+        yMin = d3.min(data, function(d){return parseInt(d.enroll_rate)});
+    var nameLengthMax = d3.max(data, function(d){
         return d.name.length;
     });
     var xScale = d3.scale.linear()
-                    .domain([0, dataset.length])
+                    .domain([0, data.length])
                     .range([padding, width - padding]);
     var yScale = d3.scale.linear()
                         .domain([yMin, yMax])
                         .range([padding, height - padding]);
 
-    var barWidth = (width - padding*2) / dataset.length - barMargin;
+    var barWidth = (width - padding*2) / data.length - barMargin;
+
+
+    data = data.sort(function(a, b) {
+        return d3.descending(parseFloat(a.enroll_rate), parseFloat(b.enroll_rate));
+    });
 
 
     var svg = d3.select(".chart").append("svg")
                                 .attr("width", width)
                                 .attr("height", height);
-    data = data.sort(function(a, b) {
-        return d3.descending(parseFloat(a.enroll_rate), parseFloat(b.enroll_rate));
-    });
-    // console.log(data);
 
-    // var tooltip = d3.select("body")
-    //                 .append("div")
-    //                 .attr("class","tooltip")
-    //                 .style("opacity",0.0);
+    var bar = svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect");
 
-
-
-
-var bar = svg.selectAll("rect")
-            .data(data)
-            .enter()
-            .append("rect");
-
-    bar.attr({
+        bar.attr({
             "fill": function(d){
                 for(var foo in json){
                     if(d.department_number === json[foo]["Id"]){
@@ -296,7 +274,9 @@ var bar = svg.selectAll("rect")
             "width": barWidth,
             "height": function(d){
                 return yScale(d.enroll_rate);
-            }})
+            },
+            "opacity": 1
+            })
         .transition()
         .duration(1000)
         .attr({
@@ -305,13 +285,13 @@ var bar = svg.selectAll("rect")
             }
         })
 
-    bar.append("title")
-        .text(function(d) {
-            if(d.national != "公立"){
-                return d.national + d.name + " " + d.department_name;
-            }
-            return d.name + " " + d.department_name;
-        });
+var barTooltip = bar.append("title")
+                .text(function(d) {
+                    if(d.national != "公立"){
+                        return d.national + d.name + " " + d.department_name;
+                    }
+                    return d.name + " " + d.department_name;
+                });
         //TEXT and test
 
     svg.selectAll("text")
@@ -338,29 +318,96 @@ var bar = svg.selectAll("rect")
                 return height - yScale(d.enroll_rate)  - 1;
             }
         });
+function updataData(data,indicator){
+    var result=[];
+    for (var foo in data){
+        data[foo]["selected"] = 0;
+    }
+    for (var foo in data) {
+        for(var barr in indicator){
+            if(data[foo]["department_number"] === indicator[barr]["Id"]){
+                result.push(data[foo]);
+                data[foo]["selected"] = 1;
+            }
+        }
+    }
 
-    // //TODO
-    // var xLable = d3.select(".xAxis");//data.length * nameLengthMax);
-
-    // xLable.selectAll("text")
-    //         .data(data)
-    //         .enter()
-    //         .append("text")
-    //         .text(function(d, i){
-    //             return d.name;
-    //         })
-    //         .attr({
-    //             "x": function(d,i){
-    //                 return xScale(i);
-    //             },
-    //             "y": 0,
-    //             "fill": "black",
-    //             "font-weight": "bold",
-    //             "font-anchor": "center",
-    //             "font-size": "12px",
-    //             "transform": "rotate(180)"
-    //         });
+    return result;
 }
+
+function updataBarChart(newData,data){
+
+// var bar = svg.selectAll("rect")
+//             .data(data)
+//             .enter()
+//             .append("rect");
+
+    var count = 0;
+    bar.transition()
+        .duration(1000)
+        .attr({
+            "x": function(d, i){
+                if(d.selected == 1){
+                    return xScale(count++);
+                }
+                return xScale(data.length);
+            },
+            "y": function(d){
+                return height - yScale(d.enroll_rate)
+            },
+            "width": barWidth,
+            "height": function(d){
+                return yScale(d.enroll_rate);
+            },
+            "opacity": function(d){
+                if(d.selected == 1){
+                    return 1;
+                }
+                return 0;
+            }
+        })
+
+    bar.append("title")
+        .text(function(d) {
+            if(d.selected == 1){
+                if(d.national != "公立"){
+                    return d.national + d.name + " " + d.department_name;
+                }
+                return d.name + " " + d.department_name;
+            }
+        });
+        //TEXT and test
+
+    svg.selectAll("text")
+        .data(newData)
+        .enter()
+        .append("text")
+        .text(function(d, i){
+            return d.enroll_rate + "%";
+        })
+        .attr({
+            "x": function(d,i){
+                return xScale(i);
+            },
+            "y": height,
+            "fill": "black",
+            "font-weight": "bold",
+            "font-anchor": "center",
+            "font-size": "10px",
+        })
+        .transition()
+        .duration(1000)
+        .attr({
+            "y": function(d){
+                return height - yScale(d.enroll_rate)  - 1;
+            }
+        });
+}
+    var xLable = d3.selectAll(".xAxis")
+                    .attr({
+                        "width": width,
+                        "height": height
+                    });
 });
 });
 };
