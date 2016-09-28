@@ -31,6 +31,12 @@ body{
     color: #666666;
 }
 
+#checkboxes{
+    font-size:16px;
+    position: absolute;
+    left: 1000;
+}
+
 </style>
 <body>
     <div class="option">
@@ -62,10 +68,9 @@ body{
     <div class="row">
         <div class="column">
             <div class="chart"></div>
-            <div class="xAxis"></div>
         </div>
         <div class="column">
-            <div id="checkboxes" style="font-size:16px"></div>
+            <div id="checkboxes"></div>
         </div>
     </div>
     <!-- <div id="tooltip" class="hidden"></div> -->
@@ -183,7 +188,7 @@ if (error)
     console.log(error);
 }
     var margin = {top: 10, right: 0, bottom: 130, left: 0};
-    var width = 1000 , height = 600, padding = 30, barMargin = 5;
+    var width = 1000 , height = 580, padding = 30, barMargin = 5;
     $.each(json, function () {
         $("#checkboxes").attr({
                             "width": width
