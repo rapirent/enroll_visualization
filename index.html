@@ -234,6 +234,10 @@ d3.csv("data/" + subjectNumber +  ".csv", function(error, data){
 if (error){
     console.log(error);
 }
+    //let it do not look so big
+    if(data.length === 1 ){
+        width = 1000/4;
+    }
     console.log(data);
     $("#checkboxes").on('change', '[type=checkbox]', function () {
         var newData = updataData(data,selectDepartment);
@@ -331,9 +335,10 @@ var barTooltip = bar.append("title")
             },
             "y": height - margin.top - margin.bottom,
             "fill": "black",
-            "font-anchor": "center",
+            "text-anchor": "center",
             "font-size": "12px",
-            "font-weight": "bold"
+            "font-weight": "bold",
+            // "text-align": "right"
         })
         .transition()
         .duration(1000)
@@ -361,7 +366,6 @@ var barTooltip = bar.append("title")
             "text-anchor": "start",
             "letter-spacing": "0px",
             "font-weight": "bold",
-            "text-anchor": "start"
         })
         .attr("writing-mode", "vertical-lr");
 function updataData(data,indicator){
@@ -436,7 +440,8 @@ function updataBarChart(newData,data){
                 return height - margin.top - margin.bottom - yScale(d.enroll_rate) - 5;
             },
             "fill": "black",
-            "font-anchor": "center",
+            "text-anchor": "center",
+            // "text-align": "center",
             "font-weight": "bold",
             "font-size": "12px",
         });
@@ -477,7 +482,6 @@ count = 0;
                 "text-anchor": "start",
                 "letter-spacing": "0px",
                 "font-weight": "bold",
-                "text-anchor": "start"
             })
             .attr("writing-mode", "vertical-lr");
 }
