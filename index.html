@@ -217,6 +217,7 @@ if (error)
         }
         selectDepartment = filterJSON(json, "checked", true);
         // console.log(json);
+        console.log("12354");
         console.log(selectDepartment);
     });
 // d3 to visualize
@@ -231,6 +232,7 @@ if (error){
     $("#checkboxes").on('change', '[type=checkbox]', function () {
         var newData = updataData(data,selectDepartment);
         d3.selectAll("text").remove();
+        d3.selectAll(".xaxis").remove()
         console.log(selectDepartment);
         console.log(data);
         updataBarChart(newData,data);
@@ -259,7 +261,10 @@ if (error){
     var svg = d3.select(".chart").append("svg")
                                 .attr("width", width)
                                 .attr("height", height);
-
+//x axis
+var schoolName = updataSchoolName(data);
+console.log(schoolName);
+//bar chart
     var bar = svg.selectAll("rect")
                 .data(data)
                 .enter()
@@ -325,6 +330,28 @@ var barTooltip = bar.append("title")
                 return height - margin.top - margin.bottom - yScale(d.enroll_rate)  - 1;
             }
         });
+    var xAxisTick = d3.svg.axis()
+                .scale(xScale)
+                .tickFormat(function(d,i) { return schoolName[i]; })
+                .tickSize(0)
+                .ticks(data.length)
+                .orient("bottom");
+
+    svg.append("g")
+        .attr({
+            "class": "xaxis",
+            "transform": "translate(" + (barWidth/2) + "," + (height - margin.top - margin.bottom) + ")"
+        })
+        .call(xAxisTick)
+        .selectAll("text")
+        .style({
+            "font-size": "13px",
+            "text-anchor": "start",
+            "letter-spacing": "0px",
+            "font-weight": "bold",
+            "text-anchor": "start"
+        })
+        .attr("writing-mode", "vertical-lr");
 function updataData(data,indicator){
     var result=[];
     for (var foo in data){
@@ -343,6 +370,7 @@ function updataData(data,indicator){
 }
 
 function updataBarChart(newData,data){
+    //bar chart
     var count = 0;
     bar.transition()
         .duration(1000)
@@ -399,36 +427,37 @@ function updataBarChart(newData,data){
             "font-anchor": "center",
             "font-size": "12px",
         });
-}
-//x axis
-var schoolName = updataSchoolName(data);
-console.log(schoolName)
-function updataSchoolName(data){
-    var temp=[];
-    for(var foo in data){
-        temp.push(data[foo].name);
-    }
-    return temp;
-}
-var xScalePrint = d3.scale.linear()
-                        .domain(schoolName)
-                        .range([0,width - margin.left - margin.right]);
+    //x axis
+        schoolName = updataSchoolName(newData);
+console.log(schoolName);
+console.log(newData);
+count = 0;
+// xScalePrint = d3.scale.linear()
+//                         .domain([0, newData.length])
+//                         .range([0,width - margin.left - margin.right]);
     // var xScale = d3.scale.linear()
     //                 .domain([0, data.length])
     //                 .range([padding, width - margin.left - margin.right - padding]);
-var xAxisTick = d3.svg.axis()
-                .scale(xScale)
-                .tickFormat(function(d,i) { return schoolName[i]; })
-                .tickSize(0)
-                .ticks(data.length)
-                .orient("bottom");
-
+    console.log(schoolName.length);
+    xAxisTickNew = d3.svg.axis()
+                    .scale(xScale)
+                    .tickFormat(function(d,i) {
+                        if(i <= schoolName.length){
+                            return schoolName[i];
+                        }else{
+                            return "";
+                        }
+                    })
+                    .tickSize(0)
+                    .ticks(data.length)
+                    .orient("bottom");
+    console.log(xAxisTickNew)
       svg.append("g")
             .attr({
                 "class": "xaxis",
                 "transform": "translate(" + (barWidth/2) + "," + (height - margin.top - margin.bottom) + ")"
             })
-            .call(xAxisTick)
+            .call(xAxisTickNew)
             .selectAll("text")
             .style({
                 "font-size": "13px",
@@ -438,6 +467,14 @@ var xAxisTick = d3.svg.axis()
                 "text-anchor": "start"
             })
             .attr("writing-mode", "vertical-lr");
+}
+function updataSchoolName(data){
+    var temp=[];
+    for(var foo in data){
+        temp.push(data[foo].name);
+    }
+    return temp;
+}
      // var x = d3.scale.ordinal()
      //  .domain(r)
      //  .rangeRoundBands([0, width], 0.12);
