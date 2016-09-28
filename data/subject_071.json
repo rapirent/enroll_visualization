@@ -1,0 +1,38 @@
+[
+    {
+        "subjectId": "7201",
+        "subjectName": "醫學學類"
+    },
+    {
+        "subjectId": "7202",
+        "subjectName": "公共衛生學類"
+    },
+    {
+        "subjectId": "7203",
+        "subjectName": "藥學學類"
+    },
+    {
+        "subjectId": "7204",
+        "subjectName": "復健醫學學類"
+    },
+    {
+        "subjectId": "7205",
+        "subjectName": "營養學類"
+    },
+    {
+        "subjectId": "7206",
+        "subjectName": "護理學類"
+    },
+    {
+        "subjectId": "7207",
+        "subjectName": "醫學技術及檢驗學類"
+    },
+    {
+        "subjectId": "7208",
+        "subjectName": "牙醫學類"
+    },
+    {
+        "subjectId": "7299",
+        "subjectName": "其他醫藥衛生學類"
+    }
+]

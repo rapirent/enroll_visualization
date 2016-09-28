@@ -1,0 +1,26 @@
+[
+    {
+        "Id": "140704",
+        "Name": "教育政策與行政學系",
+        "checked": true,
+        "Color": "#98abc5"
+    },
+    {
+        "Id": "140707",
+        "Name": "教育經營與管理學系",
+        "checked": true,
+        "Color": "#7fbc41"
+    },
+    {
+        "Id": "140710",
+        "Name": "教育行政與管理學系",
+        "checked": true,
+        "Color": "#6b486b"
+    },
+    {
+        "Id": "140715",
+        "Name": "教育領導與科技發展學位學程",
+        "checked": true,
+        "Color": "#de77ae"
+    }
+]

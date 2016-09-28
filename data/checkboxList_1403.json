@@ -1,0 +1,38 @@
+[
+    {
+        "Id": "140301",
+        "Name": "工業教育(與技術)學系",
+        "checked": true,
+        "Color": "#98abc5"
+    },
+    {
+        "Id": "140302",
+        "Name": "(工業)科技教育學系",
+        "checked": true,
+        "Color": "#7fbc41"
+    },
+    {
+        "Id": "140315",
+        "Name": "體育學系",
+        "checked": true,
+        "Color": "#6b486b"
+    },
+    {
+        "Id": "140325",
+        "Name": "健康促進與衛生教育學系",
+        "checked": true,
+        "Color": "#de77ae"
+    },
+    {
+        "Id": "140329",
+        "Name": "體育與運動科學系",
+        "checked": true,
+        "Color": "#a05d56"
+    },
+    {
+        "Id": "140330",
+        "Name": "運動學系",
+        "checked": true,
+        "Color": "#d0743c"
+    }
+]

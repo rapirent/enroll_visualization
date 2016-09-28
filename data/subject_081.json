@@ -1,0 +1,38 @@
+[
+    {
+        "subjectId": "8101",
+        "subjectName": "餐旅服務學類"
+    },
+    {
+        "subjectId": "8102",
+        "subjectName": "觀光休閒學類"
+    },
+    {
+        "subjectId": "8103",
+        "subjectName": "競技運動學類"
+    },
+    {
+        "subjectId": "8104",
+        "subjectName": "運動科技學類"
+    },
+    {
+        "subjectId": "8105",
+        "subjectName": "運動休閒及休閒管理學類"
+    },
+    {
+        "subjectId": "8106",
+        "subjectName": "生活應用科學學類"
+    },
+    {
+        "subjectId": "8107",
+        "subjectName": "服飾學類"
+    },
+    {
+        "subjectId": "8108",
+        "subjectName": "美容學類"
+    },
+    {
+        "subjectId": "8199",
+        "subjectName": "其他民生學類"
+    }
+]

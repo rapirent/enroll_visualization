@@ -1,0 +1,22 @@
+[
+    {
+        "subjectId": "4801",
+        "subjectName": "電算機一般學類"
+    },
+    {
+        "subjectId": "4802",
+        "subjectName": "網路學類"
+    },
+    {
+        "subjectId": "4803",
+        "subjectName": "軟體發展學類"
+    },
+    {
+        "subjectId": "4805",
+        "subjectName": "電算機應用學類"
+    },
+    {
+        "subjectId": "4899",
+        "subjectName": "其他電算機學類"
+    }
+]

@@ -1,0 +1,46 @@
+[
+    {
+        "subjectId": "2201",
+        "subjectName": "台灣語文學類"
+    },
+    {
+        "subjectId": "2202",
+        "subjectName": "中國語文學類"
+    },
+    {
+        "subjectId": "2203",
+        "subjectName": "外國語文學類"
+    },
+    {
+        "subjectId": "2204",
+        "subjectName": "其他語文學類"
+    },
+    {
+        "subjectId": "2205",
+        "subjectName": "翻譯學類"
+    },
+    {
+        "subjectId": "2207",
+        "subjectName": "語言學類"
+    },
+    {
+        "subjectId": "2208",
+        "subjectName": "宗教學類"
+    },
+    {
+        "subjectId": "2209",
+        "subjectName": "歷史學類"
+    },
+    {
+        "subjectId": "2210",
+        "subjectName": "人類學學類"
+    },
+    {
+        "subjectId": "2211",
+        "subjectName": "哲學學類"
+    },
+    {
+        "subjectId": "2299",
+        "subjectName": "其他人文學類"
+    }
+]

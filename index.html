@@ -246,7 +246,12 @@ if (error){
     var xScale = d3.scale.linear()
                     .domain([0, data.length])
                     .range([padding, width - margin.left - margin.right - padding]);
-    var yScale = d3.scale.linear()
+    //to handle the problem that having only one data
+    var yScale = data.length == 1 ?
+                    d3.scale.linear()
+                        .domain([0, yMax])
+                        .range([padding, height - margin.top - margin.bottom - padding]):
+                    d3.scale.linear()
                         .domain([yMin, yMax])
                         .range([padding, height - margin.top - margin.bottom - padding]);
 
@@ -277,7 +282,7 @@ console.log(schoolName);
                         return json[foo]["Color"];
                     }
                 }
-                return "#09a";
+                return "#000000";
             },
             "x": function(d, i){
                 return xScale(i);

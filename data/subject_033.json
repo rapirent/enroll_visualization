@@ -1,0 +1,42 @@
+[
+    {
+        "subjectId": "3401",
+        "subjectName": "一般商業學類"
+    },
+    {
+        "subjectId": "3402",
+        "subjectName": "會計學類"
+    },
+    {
+        "subjectId": "3403",
+        "subjectName": "企業管理學類"
+    },
+    {
+        "subjectId": "3404",
+        "subjectName": "貿易學類"
+    },
+    {
+        "subjectId": "3405",
+        "subjectName": "財務金融學類"
+    },
+    {
+        "subjectId": "3406",
+        "subjectName": "風險管理學類"
+    },
+    {
+        "subjectId": "3407",
+        "subjectName": "財政學類"
+    },
+    {
+        "subjectId": "3408",
+        "subjectName": "行銷與流通學類"
+    },
+    {
+        "subjectId": "3409",
+        "subjectName": "醫管學類"
+    },
+    {
+        "subjectId": "3499",
+        "subjectName": "其他商業及管理學類"
+    }
+]
