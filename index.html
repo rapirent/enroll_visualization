@@ -18,16 +18,17 @@
 }*/
 .column{
   display: inline-block;
+  vertical-align: top;
 }
-body {
-  display: table-cell;
-  vertical-align: middle;
-  font-size: 16px;
-  font-family: 'cwTeXYen', sans-serif;
-  letter-spacing: 1px;
-  line-height: 20px;
-  font-weight: normal;
-  color: #666666;
+body{
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 16px;
+    font-family: 'cwTeXYen', sans-serif;
+    letter-spacing: 1px;
+    line-height: 20px;
+    font-weight: normal;
+    color: #666666;
 }
 
 </style>
@@ -61,12 +62,12 @@ body {
     <div class="row">
         <div class="column">
             <div class="chart"></div>
+            <div class="xAxis"></div>
         </div>
         <div class="column">
             <div id="checkboxes" style="font-size:16px"></div>
         </div>
     </div>
-    <div class="xAxis"></div>
     <!-- <div id="tooltip" class="hidden"></div> -->
     <!-- <div id = "legendContainer" class="legendContainer"></div> -->
 <script>
@@ -174,17 +175,18 @@ body {
 //create json along with json
 document.getElementById("search").onclick = function () {
 d3.selectAll("#selectSubject").remove();
+// d3.selectAll(".xAxis").remove();
 var selectDepartment;
 d3.json("data/checkboxList_" + subjectNumber + ".json" , function(error, json){
 if (error)
 {
     console.log(error);
 }
-    var margin = {top: 100, right: 50, bottom: 30, left: 80};
-    var width = 1000 , height = 500, padding = 30, barMargin = 9;
+    var margin = {top: 10, right: 0, bottom: 130, left: 0};
+    var width = 1000 , height = 600, padding = 30, barMargin = 5;
     $.each(json, function () {
         $("#checkboxes").attr({
-                            "width": width,
+                            "width": width
                         })
                         .append($("<div>").text(this.Name)
                         .attr('style', "color:" + this.Color)
@@ -226,8 +228,6 @@ if (error){
     console.log(error);
 }
     console.log(data);
-    // data = dataset;
-    // updataBarChart(dataset,dataset);
     $("#checkboxes").on('change', '[type=checkbox]', function () {
         var newData = updataData(data,selectDepartment);
         d3.selectAll("text").remove();
@@ -236,19 +236,19 @@ if (error){
         updataBarChart(newData,data);
     });
 
-    var yMax = d3.max(data, function(d){return parseInt(d.enroll_rate)}),
-        yMin = d3.min(data, function(d){return parseInt(d.enroll_rate)});
+    var yMax = d3.max(data, function(d){return parseInt(d.enroll_rate);}),
+        yMin = d3.min(data, function(d){return parseInt(d.enroll_rate);});
     var nameLengthMax = d3.max(data, function(d){
         return d.name.length;
     });
     var xScale = d3.scale.linear()
                     .domain([0, data.length])
-                    .range([padding, width - padding]);
+                    .range([padding, width - margin.left - margin.right - padding]);
     var yScale = d3.scale.linear()
                         .domain([yMin, yMax])
-                        .range([padding, height - padding]);
+                        .range([padding, height - margin.top - margin.bottom - padding]);
 
-    var barWidth = (width - padding*2) / data.length - barMargin;
+    var barWidth = (width - padding * 2) / data.length - barMargin;
 
 
     data = data.sort(function(a, b) {
@@ -277,18 +277,19 @@ if (error){
             "x": function(d, i){
                 return xScale(i);
             },
-            "y": height,
+            "y": height - margin.top - margin.bottom,
             "width": barWidth,
-            "height": function(d){
-                return yScale(d.enroll_rate);
-            },
+            "height": 0,
             "opacity": 1
             })
         .transition()
         .duration(1000)
         .attr({
             "y": function(d){
-                return height - yScale(d.enroll_rate);
+                return height - margin.top - margin.bottom - yScale(d.enroll_rate);
+            },
+            "height": function(d){
+                return yScale(d.enroll_rate);
             }
         })
 
@@ -305,24 +306,23 @@ var barTooltip = bar.append("title")
         .data(data)
         .enter()
         .append("text")
-        .text(function(d, i){
-            return d.enroll_rate + "%";
+        .text(function(d){
+            return d.enroll_rate + "%" ;
         })
         .attr({
             "x": function(d,i){
                 return xScale(i);
             },
-            "y": height,
+            "y": height - margin.top - margin.bottom,
             "fill": "black",
-            "font-weight": "bold",
             "font-anchor": "center",
-            "font-size": "10px",
+            "font-size": "12px",
         })
         .transition()
         .duration(1000)
         .attr({
             "y": function(d){
-                return height - yScale(d.enroll_rate)  - 1;
+                return height - margin.top - margin.bottom - yScale(d.enroll_rate)  - 1;
             }
         });
 function updataData(data,indicator){
@@ -343,12 +343,6 @@ function updataData(data,indicator){
 }
 
 function updataBarChart(newData,data){
-
-// var bar = svg.selectAll("rect")
-//             .data(data)
-//             .enter()
-//             .append("rect");
-
     var count = 0;
     bar.transition()
         .duration(1000)
@@ -360,7 +354,7 @@ function updataBarChart(newData,data){
                 return xScale(data.length);
             },
             "y": function(d){
-                return height - yScale(d.enroll_rate);
+                return height - margin.top - margin.bottom - yScale(d.enroll_rate);
             },
             "width": barWidth,
             "height": function(d){
@@ -392,29 +386,84 @@ function updataBarChart(newData,data){
         .text(function(d, i){
             return d.enroll_rate + "%";
         })
+        .transition()
+        .duration(1000)
         .attr({
             "x": function(d,i){
                 return xScale(i);
             },
-            "y": height,
-            "fill": "black",
-            "font-weight": "bold",
-            "font-anchor": "center",
-            "font-size": "10px",
-        })
-        .transition()
-        .duration(1000)
-        .attr({
             "y": function(d){
-                return height - yScale(d.enroll_rate)  - 1;
-            }
+                return height - margin.top - margin.bottom - yScale(d.enroll_rate)  - 1;
+            },
+            "fill": "black",
+            "font-anchor": "center",
+            "font-size": "12px",
         });
 }
-    // var xLable = d3.selectAll(".xAxis")
-    //                 .attr({
-    //                     "width": width,
-    //                     "height": height
-    //                 });
+//x axis
+var schoolName = updataSchoolName(data);
+console.log(schoolName)
+function updataSchoolName(data){
+    var temp=[];
+    for(var foo in data){
+        temp.push(data[foo].name);
+    }
+    return temp;
+}
+var xScalePrint = d3.scale.linear()
+                        .domain(schoolName)
+                        .range([0,width - margin.left - margin.right]);
+    // var xScale = d3.scale.linear()
+    //                 .domain([0, data.length])
+    //                 .range([padding, width - margin.left - margin.right - padding]);
+var xAxisTick = d3.svg.axis()
+                .scale(xScale)
+                .tickFormat(function(d,i) { return schoolName[i]; })
+                .tickSize(0)
+                .ticks(data.length)
+                .orient("bottom");
+
+      svg.append("g")
+            .attr({
+                "class": "xaxis",
+                "transform": "translate(" + (barWidth/2) + "," + (height - margin.top - margin.bottom) + ")"
+            })
+            .call(xAxisTick)
+            .selectAll("text")
+            .style({
+                "font-size": "13px",
+                "text-anchor": "start",
+                "letter-spacing": "0px",
+                "font-weight": "bold",
+                "text-anchor": "start"
+            })
+            .attr("writing-mode", "vertical-lr");
+     // var x = d3.scale.ordinal()
+     //  .domain(r)
+     //  .rangeRoundBands([0, width], 0.12);
+// var xLable = d3.select(".xAxis").append("row");
+//     xLable.data(data)
+//         .enter()
+//         .append("column")
+//         .attr({
+//             "x": function(d,i){
+//                 return xScale(i) + barWidth;
+//             },
+//             // "transform": "rotate(90)"
+//         })
+//         .append("text")
+//         .text(function(d, i){
+//             return d.name;
+//         })
+//         .attr({
+//             "fill": "black",
+//             "font-weight": "bold",
+//             "font-anchor": "center",
+//             "font-size": "12px",
+//             //             "-webkit-writing-mode": "vertical-lr",
+//             // "writing-mode": "vertical-lr"
+//          })
+//         .append("br");
 });
 });
 };
