@@ -201,7 +201,13 @@ if (error)
                             $("<input>").attr('type', 'checkbox')
                                     .val(this.Id)
                                     .prop('checked', this.checked)
-                        ));
+                        )//add tip color!
+                        .append($("<span>")
+                        .text("█")
+                        .attr({
+                            "background-color": this.Color,
+                            // "fill": this.Color
+                        })));
         selectDepartment = filterJSON(json, "checked", true);
     });
 
