@@ -304,7 +304,7 @@ console.log(schoolName);
             "y": height - margin.top - margin.bottom,
             "width": barWidth,
             "height": 0,
-            "opacity": 0.5,
+            "opacity": 0.3,
             "id": function(d){
                 return "id" + d.department_number;
             }
@@ -314,10 +314,10 @@ console.log(schoolName);
             var setOpa = d3.select(this).attr("opacity");
             console.log(setNumber);
             console.log(setOpa);
-            if(d3.select(this).attr("opacity") == 0.5){
+            if(d3.select(this).attr("opacity") == 0.3){
                 d3.selectAll("#" + setNumber).attr("opacity", 1);
             }else if(d3.select(this).attr("opacity") == 1){
-                d3.selectAll("#" + setNumber).attr("opacity", 0.5);
+                d3.selectAll("#" + setNumber).attr("opacity", 0.3);
             }
         })
         .transition()
