@@ -16,6 +16,26 @@
 .option{
   margin: 30px;
 }*/
+html, body {
+    height: 100%;
+}
+#title{
+    /*margin: 0px auto;*/
+    width :1000 ;
+    height : 580;
+    font-weight: normal;
+    text-align: left;
+}
+h1{
+    font-size: 20px;
+    font-weight: inherit;
+    text-align: inherit;
+  /*align: center;*/
+}
+h2{
+    font-weight: inherit;
+    text-align: inherit;
+}
 .column{
   display: inline-block;
   vertical-align: top;
@@ -24,12 +44,13 @@ body{
     height: 100%;
     display: table-cell;
     vertical-align: middle;
+    /*text-align: center;*/
     font-size: 16px;
     font-family: 'cwTeXYen', sans-serif;
     letter-spacing: 1px;
     line-height: 20px;
     font-weight: normal;
-    color: #666666;
+    color: #666666  #ea5a5a;
 }
 
 #checkboxes{
@@ -40,6 +61,10 @@ body{
 
 </style>
 <body>
+    <div class="title" sytle="margin: 0px auto">
+        <h1 align="center">您想知道你心目中校系的註冊率和該學類其他科系相比是多還是少嗎？</h1>
+        <h2 align="center">馬上點選下列選單點選該學類確認看看吧！</h2>
+    </div>
     <div class="option">
     <span style="font-size:16px">選擇領域：</span>
     <select id="field" ></select>
@@ -63,7 +88,7 @@ body{
     <select id="subject"></select>
     <button id="search" type="button">search</button>
      <span style="text-anchor:left"><br>(顏色分類以教育部公佈之科系代碼為準)<br>
-    參考來源：教育部104年公佈之大專院校錄取率<br>
+    參考來源：教育部104年公佈之大專院校註冊率<br>
     </span>
     </div>
     <div class="row">
@@ -189,7 +214,7 @@ if (error)
     console.log(error);
 }
     var margin = {top: 10, right: 0, bottom: 140, left: 0};
-    var width = 1000 , height = 580, padding = 30, barMargin = 5;
+    var width = 1000 , height = 450, padding = 30, barMargin = 5;
     $.each(json, function () {
         $("#checkboxes").attr({
                             "width": width
@@ -426,7 +451,11 @@ function updataBarChart(newData,data){
             },
             "opacity": function(d){
                 if(d.selected == 1){
-                    return 0.5;
+                    if(d3.select(this).attr("opacity") == 0.5){
+                        return 0.5;
+                    }else{
+                        return 1;
+                    }
                 }
                 return 0;
             }
