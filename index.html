@@ -155,7 +155,6 @@ if (error){
                                 .attr("height", h + margin.top + margin.bottom)
                                 .append("g")
                                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
-    yDataArray=[];
     fieldData.forEach(function(d) {
         var name = d.name;
         var y0 = 0;//every data's first data is first part
@@ -168,15 +167,6 @@ if (error){
                             y1: y0 += parseInt(d[category]),//shift color
                         };
                     });
-        yDataArray.push(color.domain()
-                    .map(function(category) {
-                        return {
-                            name: name,
-                            category: category,
-                            y0: y0,
-                            y1: y0 =  y0 + parseInt(d[category]),//shift color
-                        };
-                    }));
         d.yMax = d.yData[d.yData.length - 1].y1;
     });
 
@@ -236,8 +226,7 @@ if (error){
         "letter-spacing": "0px",
         });
 
-
-
+//stack bar chart
         bar = svgBar.selectAll(".stackChart")
                 .data(fieldData)
                 .enter().append("g")
@@ -247,11 +236,10 @@ if (error){
                 .data(function(d) {
                     return d.yData;
                 })
-                .enter()
+    Satackbar = bar.enter()
                 .append("rect");
-        bar.attr({
+    Satackbar.attr({
             "fill": function(d){
-                console.log("1");
                 return color(d.category);
             },
             "x": function(d){
@@ -264,7 +252,7 @@ if (error){
             "height": 0,
             "opacity": 0
         });
-        bar.transition()
+    Satackbar.transition()
             .duration(1000)
             .attr({
                 "opacity": 0.5,
@@ -272,6 +260,17 @@ if (error){
                     return yScale(d.y0) - yScale(d.y1);
                 }
             });
+    textBar = bar.enter()
+                .append("text");
+    textBar.text(function(d){
+                return (d.y1 - d.y0) + "系";
+            })
+            .attr({
+                "x": function(d){
+                    return xScale(d.name);
+                },
+                "opacity": 0,
+            })
 //legend
     var legendWidth = 200, legendheight = 100;
         var svgLegend = d3.select(".legend").append("svg")
@@ -375,32 +374,56 @@ piePath.transition()
         }
 
     function change(selectColr) {
-        bar.transition()
-            .duration(1000)
-            .attr({
-                "y": function(d){
-                    if(color(d.category) === selectColr){
-                        return yScale(d.y1 - d.y0);
+        Satackbar.transition()
+                .duration(1000)
+                .attr({
+                    "y": function(d){
+                        if(color(d.category) === selectColr){
+                            return yScale(d.y1 - d.y0);
+                        }
+                        return 0;
+                    },
+                    "opacity": function(d){
+                        if(color(d.category) === selectColr){
+                            return 1;
+                        }
+                        return 0;
                     }
-                    return 0;
-                },
-                "opacity": function(d){
-                    if(color(d.category) === selectColr){
-                        return 1;
-                    }
-                    return 0;
-                }
-            })
+                });
+        textBar.transition()
+                .duration(1000)
+                .attr({
+                    "y": function(d){
+                        if(color(d.category) === selectColr){
+                            return yScale(d.y1 - d.y0);
+                        }
+                        return 0;
+                    },
+                    "opacity": function(d){
+                        if(color(d.category) === selectColr){
+                            return 1;
+                        }
+                        return 0;
+                    },
+                });
     }
     function restore(){
-        bar.transition()
-            .duration(1000)
-            .attr({
-                "y": function(d){
-                    return yScale(d.y1);
-                },
-                "opacity": 0.5
-            })
+        Satackbar.transition()
+                .duration(1000)
+                .attr({
+                    "y": function(d){
+                        return yScale(d.y1);
+                    },
+                    "opacity": 0.5
+                });
+        textBar.transition()
+                .duration(1000)
+                .attr({
+                    "y": function(d){
+                        return yScale(d.y1);
+                    },
+                    "opacity": 0
+                });
     }
 });
 });
