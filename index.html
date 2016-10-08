@@ -109,8 +109,6 @@ body{
         </div>
     </div>
     <div class="tooltip"></div>
-    <!-- <div id="tooltip" class="hidden"></div> -->
-    <!-- <div id = "legendContainer" class="legendContainer"></div> -->
 <script>
 $(".selection").change(function(){
     //TODO
@@ -203,6 +201,12 @@ if (error){
                     .scale(yScale)
                     .tickSize(1)
                     .orient("left")
+                    .tickFormat(function(d){
+                        if(d===0){
+                            return "系數";
+                        }
+                        return d;
+                    });
 // show axis
     svgBar.append("g")
       .attr({
@@ -225,9 +229,11 @@ if (error){
       .call(yAxis)
       .append("text")
       .attr({
-        "transform": "rotate(-90)",
         "dy": ".71em",
-        "text-anchor": "end"
+        "text-anchor": "end",
+    })
+      .style({
+        "letter-spacing": "0px",
         });
 
 
@@ -267,8 +273,9 @@ if (error){
                 }
             });
 //legend
+    var legendWidth = 200, legendheight = 100;
         var svgLegend = d3.select(".legend").append("svg")
-                            .attr("width", width + 40)
+                            .attr("width", legendWidth + 40)
                             .attr("height", height);
 
     var legend = svgLegend.selectAll(".legendChart")
@@ -282,17 +289,17 @@ if (error){
                     });
     console.log(color.domain());
     legend.append("rect")
-      .attr("x", width - 18)
+      .attr("x", legendWidth - 18)
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color);
 
     legend.append("text")
-      .attr("x", width -20)
+      .attr("x", legendWidth -20)
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d; });
+      .text(function(d) { return "註冊率" + d; });
 
     })
     var width = 100 , height = 100, padding = 20;
