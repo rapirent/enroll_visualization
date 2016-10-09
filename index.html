@@ -96,7 +96,7 @@ body{
         <input type="radio" name="mode" value="2"/>以單一學校觀看註冊率
         <input type="radio" name="mode" value="3"/>以地區觀看
     </div>
-    </div>
+    <div class="option"></div>
     <div class="row">
         <div class="column">
             <div class="chart"></div>
@@ -113,14 +113,15 @@ body{
 $(".selection").change(function(){
     //TODO
     var selectionValue = $('input[name="mode"]:checked').val();
-    if(selectionValue===1){
+    if(selectionValue==1){
         //field
         //fieldChart();
-    }else if(selectionValue===2){
+        deleteSelectSchool();
+    }else if(selectionValue==2){
         //school
-        //createSelectSchol();
+        createSelectSchool();
         //schoolChart();
-    }else if(selectionValue===3){
+    }else if(selectionValue==3){
         //not yet to be determined
 
     }else{
@@ -128,6 +129,18 @@ $(".selection").change(function(){
         console.log(selectionValue);
     }
 });
+function createSelectSchool(){
+    $("<span>").text("請選擇學校:").appendTo(".option");
+    var sel = $("<select>").appendTo(".option");
+    $.getJSON(("data/school.json"), function(schoolList){
+         $.each(schoolList, function (d, i){
+            sel.append($("<option>").val(i.Number).text(i.Name))
+        });
+    });
+}
+function deleteSelectSchool(){
+    $("select").remove();
+}
 //first pie chart
 d3.csv("data/all.csv", function(error, allData){
 if (error){
