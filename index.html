@@ -130,7 +130,7 @@ $(".selection").change(function(){
     }
 });
 function createSelectSchool(){
-    $("<span>").text("請選擇學校:").appendTo(".option");
+    $("<span>").attr({id:"selectionText"}).text("請選擇學校:").appendTo(".option");
     var sel = $("<select>").appendTo(".option");
     $.getJSON(("data/school.json"), function(schoolList){
          $.each(schoolList, function (d, i){
@@ -139,6 +139,7 @@ function createSelectSchool(){
     });
 }
 function deleteSelectSchool(){
+    $("#selectionText").remove();
     $("select").remove();
 }
 //first pie chart
